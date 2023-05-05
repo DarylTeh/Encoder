@@ -21,18 +21,18 @@ public class JavaApplication6 {
         Scanner sc = new Scanner(System.in);
         String originalText, result, choice;
 
-        do {
+        do { //make sure input is valid
             System.out.println("Encode or Decode");
             choice = sc.nextLine().toLowerCase().trim();
 
         } while (!choice.equals("encode") && !choice.equals("decode"));
         System.out.println(choice);
-        if (choice.equals("encode")) {
+        if (choice.equals("encode")) { //encode text option
             System.out.println("Enter text to encode");
             originalText = sc.nextLine(); //scan for 1 line of input for decoded text
             result = Obfuscator.encode(originalText.toUpperCase());
             System.out.println(result);
-        } else {
+        } else { //decode text option
             System.out.println("Enter text to decode");
             originalText = sc.nextLine(); //scan for 1 line of input for decoded text
             result = Obfuscator.decode(originalText.toUpperCase());
