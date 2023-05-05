@@ -42,7 +42,7 @@ class Obfuscator {
         hashMap.put("T", 19);
         hashMap.put("U", 20);
         hashMap.put("V", 21);
-        hashMap.put("W", 32);
+        hashMap.put("W", 22);
         hashMap.put("X", 23);
         hashMap.put("Y", 24);
         hashMap.put("Z", 25);
@@ -67,6 +67,7 @@ class Obfuscator {
     }
 
     public static String encode(String plainText) {
+        result = key;
         int obfuscateNum = hashMap.get(key);
         int overflowNum;
         int encodedCharVal;
@@ -77,7 +78,6 @@ class Obfuscator {
                 if (hashMap.get(Character.toString(ch[i]))-obfuscateNum < 0) { //check if character value is less than obfuscateNum, go back to 43 if negative
                     overflowNum = hashMap.get(Character.toString(ch[i])) - obfuscateNum;
                     encodedCharVal = 44 + overflowNum; // get overflowed encodedCharVal
-                    System.out.println(overflowNum);
 
                     for (Entry<String, Integer> entry : hashMap.entrySet()) {
                         if (entry.getValue() == encodedCharVal) {
@@ -103,19 +103,36 @@ class Obfuscator {
     }
 
     public static String decode(String encodedText) {
-        int obfuscateNum = Integer.parseInt(Character.toString(encodedText.charAt(0)));
+        int obfuscateNum = hashMap.get(key);
+        int overflowNum;
+        int encodedCharVal;
         char[] ch = encodedText.trim().toCharArray();
-        for (int i = 0; i < ch.length; i++) {
-            if (ch[i] != ' ' && !hashMap.containsValue(ch[i])) {
-                if (obfuscateNum > 43) { //check if num is above 43, if yes then overflow
-                    obfuscateNum = 44 - obfuscateNum;
-                    ch[i] += obfuscateNum;
+        for (int i = 1; i < ch.length; i++) { //go thru each char in string
+            overflowNum = 0; encodedCharVal=0;
+            if (ch[i] != ' ' && hashMap.containsKey(Character.toString(ch[i]))) { //check if character is whitespace or not found in table
+                if (hashMap.get(Character.toString(ch[i]))+obfuscateNum > 43) { //check if character value is less than obfuscateNum, go back to 43 if negative
+                    overflowNum = (hashMap.get(Character.toString(ch[i])) + obfuscateNum) - 44;
+                    encodedCharVal = 0 + overflowNum; // get overflowed encodedCharVal
+
+                    for (Entry<String, Integer> entry : hashMap.entrySet()) {
+                        if (entry.getValue() == encodedCharVal) {
+                            ch[i] = entry.getKey().charAt(0);
+                            break;
+                        }
+                    }
                     result += ch[i];
                 } else {
-                    ch[i] += obfuscateNum;
+                    encodedCharVal = hashMap.get(Character.toString(ch[i])) + obfuscateNum;
+                    for (Entry<String, Integer> entry : hashMap.entrySet()) {
+                        if (entry.getValue() == encodedCharVal) {
+                            ch[i] = entry.getKey().charAt(0);
+                            break;
+                        }
+                    }
                     result += ch[i];
                 }
-            }
+            } else
+                result += ch[i];
         }
         return result;
     }
