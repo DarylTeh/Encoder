@@ -110,7 +110,7 @@ class Obfuscator {
         for (int i = 1; i < ch.length; i++) { //go thru each char in string
             overflowNum = 0; encodedCharVal=0;
             if (ch[i] != ' ' && hashMap.containsKey(Character.toString(ch[i]))) { //check if character is whitespace or not found in table
-                if (hashMap.get(Character.toString(ch[i]))+obfuscateNum > 43) { //check if character value is less than obfuscateNum, go back to 43 if negative
+                if (hashMap.get(Character.toString(ch[i]))+obfuscateNum > 43) { //check if character value is less than obfuscateNum, go back to 0 if over 43
                     overflowNum = (hashMap.get(Character.toString(ch[i])) + obfuscateNum) - 44;
                     encodedCharVal = 0 + overflowNum; // get overflowed encodedCharVal
 
